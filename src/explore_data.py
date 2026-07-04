@@ -9,7 +9,7 @@ inconsistent bank naming) before they leak into the cleaning pipeline.
 
 import pandas as pd
 
-RAW_DATA_PATH = "data/raw/upi_declined_transactions.csv"
+RAW_DATA_PATH = "data/raw/npci_declined_transactions.csv"
 
 def explore():
     df = pd.read_csv(RAW_DATA_PATH)
