@@ -17,9 +17,14 @@ format:
       (e.g. "Yes Bank - Prepaid - YP2" vs "Yes Bank ? Prepaid ? YP2")
     - Normalizes casing (e.g. "Bank Of India" vs "bank of india" vs
       "Bank of India" were being treated as different banks)
+    - Normalizes "Limited" -> "Ltd" and removes parentheses, since these
+      were also fragmenting entries (e.g. "Equitas Small Finance Bank
+      Limited" vs "...Ltd", "Karnataka Gramin Bank (Erstwhile...)" vs
+      "Karnataka Gramin Bank Erstwhile...")
     - Applies explicit alias mapping for known duplicates that formatting
-      rules alone can't catch (e.g. "Yes Bank Prepaid YP2" with no
-      hyphens at all vs the hyphenated variant)
+      rules alone can't catch, including spelling variants
+      (e.g. "Vikash" vs "Vikas") found via systematic fuzzy-matching in
+      src/check_duplicate_banks.py, not just manual inspection
 - Confirms approved/BD/TD are percentages (see explore_data.py validation)
 - Adds a derived total_decline_pct column
 """
@@ -31,10 +36,15 @@ RAW_PATH = "data/raw/npci_declined_transactions.csv"
 PROCESSED_PATH = "data/processed/npci_declined_cleaned.csv"
 
 # Explicit fixes for known duplicate entities that regex/casing rules
-# can't catch on their own (inconsistent formatting in the raw source,
-# not a pattern we can generalize). Keys are post-standardization names.
+# can't catch on their own (inconsistent formatting or spelling in the
+# raw source, not a pattern we can generalize). Keys are
+# post-standardization names -> canonical name to merge into.
+# Found via src/check_duplicate_banks.py fuzzy-matching.
 BANK_ALIASES = {
     "Yes Bank Prepaid Yp2": "Yes Bank - Prepaid - Yp2",
+    "Andhra Pradesh Grameena Vikash Bank": "Andhra Pradesh Grameena Vikas Bank",
+    "Paytm Payments Bank": "Paytm Payments Bank Ltd",
+    "Fincare Small Finance Bank": "Fincare Small Finance Bank Ltd",
 }
 
 def standardize_bank_name(name):
@@ -43,6 +53,9 @@ def standardize_bank_name(name):
     name = name.replace("?", "-")              # fix corrupted special chars
     name = re.sub(r"\s*-\s*", " - ", name)     # consistent spacing around hyphens
     name = name.rstrip(".")                    # remove trailing period (Ltd. vs Ltd)
+    name = re.sub(r"\bLimited\b", "Ltd", name) # normalize Limited -> Ltd
+    name = re.sub(r"[()]", "", name)           # remove parentheses (keep content)
+    name = re.sub(r"\s+", " ", name).strip()   # re-collapse spaces after removals
     name = name.title()                        # normalize casing
     return name
 
