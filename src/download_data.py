@@ -32,8 +32,13 @@ def download_data():
         print(f"Data already exists at {RAW_DATA_PATH}")
         return
     print("Downloading NPCI declined transactions dataset (NFS, AEPS)...")
-    urllib.request.urlretrieve(SOURCE_URL, RAW_DATA_PATH)
-    print(f"Saved to {RAW_DATA_PATH}")
-
+    try:
+        urllib.request.urlretrieve(SOURCE_URL, RAW_DATA_PATH)
+        print(f"Saved to {RAW_DATA_PATH}")
+    except Exception as e:
+        print(f"ERROR: Failed to download dataset automatically ({e})")
+        print(f"Please download manually from: {SOURCE_URL}")
+        print(f"Save the file as: {RAW_DATA_PATH}")
+        
 if __name__ == "__main__":
     download_data()
