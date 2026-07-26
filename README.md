@@ -7,7 +7,8 @@ systems — separating technical infrastructure failures from business/user
 declines — across 107 banks, August 2021 to July 2023.
 
 ## Tools
-Python (pandas, matplotlib, seaborn) · SQL (SQLite) · Jupyter
+Python (pandas, matplotlib, seaborn) · SQL (SQLite) · Jupyter · pytest
+
 
 ## Data Source
 [India Data Portal – NPCI Product Wise Declined Transactions](https://ckandev.indiadataportal.com/dataset/national-payments-corporation-of-india-npci/resource/f8c33592-34cd-4bdf-b4b8-d845d67b4eb4) 
@@ -65,6 +66,8 @@ NPCI-Digital-Payments-Failure-Analysis/
 ├── FINDINGS.md      # detailed findings write-up
 ├── NOTES.md         # data source decision log
 └── requirements.txt
+├── tests/
+│   └── test_clean_data.py  # unit tests for bank-name cleaning logic (run: pytest tests/)
 
 ## Status
 ✅ Complete
