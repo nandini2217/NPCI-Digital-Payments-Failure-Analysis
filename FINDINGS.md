@@ -72,3 +72,8 @@ decline) perform notably worse than peers of similar size.
   seen in Finding #3 for that month — it is probably a reporting gap, 
   not a genuine reliability improvement. Flagged via `data_quality_flag` 
   column rather than removed, so analysis can account for it.
+
+  Note: even after excluding the 47 flagged rows, a modest dip remains 
+  in Dec 2022 among the remaining banks — so some genuine disruption 
+  that month cannot be ruled out, though the flagged rows account for 
+  most of the anomaly.
