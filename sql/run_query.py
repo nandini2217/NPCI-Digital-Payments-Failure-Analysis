@@ -3,6 +3,10 @@ Quick SQL Query Runner
 ------------------------
 Runs the core business-question queries from sql/queries.sql against 
 the SQLite database and prints results.
+
+NOTE: All queries filter out data_quality_flag = 1 rows (unreliable 
+checksums, mostly from a Dec 2022 AEPS reporting anomaly — see 
+FINDINGS.md) so results match the notebook's corrected charts.
 """
 
 import sqlite3
@@ -22,6 +26,7 @@ if __name__ == "__main__":
         """
         SELECT bank, ROUND(AVG(td_pct), 2) AS avg_td_pct
         FROM declined_transactions
+        WHERE data_quality_flag = 0
         GROUP BY bank
         ORDER BY avg_td_pct DESC
         LIMIT 10
@@ -33,6 +38,7 @@ if __name__ == "__main__":
         """
         SELECT bank, ROUND(AVG(bd_pct), 2) AS avg_bd_pct
         FROM declined_transactions
+        WHERE data_quality_flag = 0
         GROUP BY bank
         ORDER BY avg_bd_pct DESC
         LIMIT 10
@@ -47,6 +53,7 @@ if __name__ == "__main__":
                ROUND(AVG(td_pct), 2) AS avg_td_pct,
                ROUND(AVG(total_decline_pct), 2) AS avg_total_decline_pct
         FROM declined_transactions
+        WHERE data_quality_flag = 0
         GROUP BY product
         """,
         "Q3: NFS vs AEPS - average decline rates"
@@ -56,6 +63,7 @@ if __name__ == "__main__":
         """
         SELECT year, month, ROUND(AVG(total_decline_pct), 2) AS avg_total_decline_pct
         FROM declined_transactions
+        WHERE data_quality_flag = 0
         GROUP BY year, month
         ORDER BY year, month
         """,
@@ -68,6 +76,7 @@ if __name__ == "__main__":
                ROUND(AVG(total_volume), 2) AS avg_volume,
                ROUND(AVG(total_decline_pct), 2) AS avg_total_decline_pct
         FROM declined_transactions
+        WHERE data_quality_flag = 0
         GROUP BY bank
         ORDER BY avg_volume DESC
         LIMIT 15
@@ -81,6 +90,7 @@ if __name__ == "__main__":
                ROUND(AVG(bd_pct), 2) AS avg_bd_pct,
                ROUND(AVG(td_pct), 2) AS avg_td_pct
         FROM declined_transactions
+        WHERE data_quality_flag = 0
         GROUP BY year, month
         ORDER BY year, month
         """,
