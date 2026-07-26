@@ -52,16 +52,18 @@ low-volume banks.
   standardization rules + a small alias map.
 
 ## Project Structure
+
+```text
 NPCI-Digital-Payments-Failure-Analysis/
 ├── data/
-│ ├── raw/ # raw CSV (not tracked)
-│ └── processed/ # cleaned data + chart images
+│   ├── raw/         # raw CSV (not tracked)
+│   └── processed/   # cleaned data + chart images
 ├── notebooks/
-│ └── eda.ipynb # full analysis with narrative
-├── sql/ # business-question queries + runner
-├── src/ # acquisition, validation, cleaning, loading scripts
-├── NOTES.md # data source decision log
-├── FINDINGS.md # detailed findings write-up
+│   └── eda.ipynb    # full analysis with narrative
+├── sql/             # business-question queries + runner
+├── src/             # acquisition, validation, cleaning, loading scripts
+├── FINDINGS.md      # detailed findings write-up
+├── NOTES.md         # data source decision log
 └── requirements.txt
 
 ## Status
