@@ -89,9 +89,21 @@ def clean_data():
     # Derived column: total decline percentage
     df["total_decline_pct"] = df["bd_pct"] + df["td_pct"]
 
+    # Flag rows where approved+BD+TD is far from 100%, indicating
+    # unreliable/incomplete reporting for that bank-month rather than
+    # a real decline pattern. Investigation (see src/explore_data.py)
+    # found 47 of 55 such rows cluster on a single AEPS reporting period
+    # (Dec 2022), suggesting a systemic NPCI reporting gap that month
+    # rather than scattered random noise.
+    checksum = df["approved_pct"] + df["bd_pct"] + df["td_pct"]
+    df["data_quality_flag"] = (checksum < 95) | (checksum > 105)
+    n_flagged = df["data_quality_flag"].sum()
+    print(f"Flagged {n_flagged} rows with unreliable checksum (outside 95-105%)")
+  
     # Reorder columns for readability
     df = df[["date", "year", "month", "product", "bank", "total_volume",
-              "approved_pct", "bd_pct", "td_pct", "total_decline_pct"]]
+              "approved_pct", "bd_pct", "td_pct", "total_decline_pct",
+              "data_quality_flag"]]
 
     df.to_csv(PROCESSED_PATH, index=False)
     print(f"Cleaned data saved to {PROCESSED_PATH}")

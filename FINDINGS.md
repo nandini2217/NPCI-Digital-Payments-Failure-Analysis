@@ -65,3 +65,10 @@ decline) perform notably worse than peers of similar size.
 - Figures are percentages reported by NPCI/issuer banks, not raw 
   transaction counts, so absolute failure volumes cannot be derived from 
   this dataset alone.
+- December 2022 AEPS reporting anomaly: 47 of 55 rows with 
+  inconsistent approved+BD+TD totals cluster on a single reporting 
+  period (Dec 2022), affecting nearly all banks' AEPS figures that 
+  month. This likely explains the apparent dip in overall decline rate 
+  seen in Finding #3 for that month — it is probably a reporting gap, 
+  not a genuine reliability improvement. Flagged via `data_quality_flag` 
+  column rather than removed, so analysis can account for it.

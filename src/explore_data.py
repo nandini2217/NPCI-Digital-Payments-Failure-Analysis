@@ -56,6 +56,26 @@ def validate_percentage_columns():
                "technical_decline_transactions", "check_sum"]].head())
     
 
+def investigate_checksum_outliers():
+    """
+    Investigates rows where approved + BD + TD is far from 100%,
+    since these indicate unreliable or incomplete reporting for that
+    bank/month rather than a real decline pattern.
+    """
+    df = pd.read_csv(RAW_DATA_PATH)
+    df["check_sum"] = (
+        df["approved_transaction_volume"]
+        + df["business_decline_transactions"]
+        + df["technical_decline_transactions"]
+    )
+    outliers = df[(df["check_sum"] < 95) | (df["check_sum"] > 105)]
+    print("=" * 50)
+    print(f"ROWS WITH CHECK_SUM OUTSIDE 95-105%: {len(outliers)}")
+    if len(outliers) > 0:
+        print(outliers[["date", "product", "issuer_bank", "check_sum"]])
+
+
 if __name__ == "__main__":
     explore()
     validate_percentage_columns()
+    investigate_checksum_outliers()
